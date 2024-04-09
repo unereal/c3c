@@ -2848,6 +2848,10 @@ static inline StorageType type_storage_type(Type *type)
 		case TYPE_TYPEDEF:
 			type = type->canonical;
 			goto RETRY;
+		case TYPE_DISTINCT:
+			is_distinct = true;
+			type = type->decl->distinct->type;
+			goto RETRY;
 		default:
 			return STORAGE_NORMAL;
 	}
