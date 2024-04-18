@@ -6151,6 +6151,15 @@ DONE:
 
 static inline void llvm_emit_expr_block(GenContext *c, BEValue *be_value, Expr *expr)
 {
+	LLVMMetadataRef old_loc = c->inline_location;
+	if (!expr->expr_block.is_block)
+	{
+		SourceSpan span = expr->span;
+		LLVMMetadataRef loc = LLVMDIBuilderCreateDebugLocation(c->context, span.row, span.col,
+		                                                       llvm_debug_current_scope(c), old_loc);
+
+		c->inline_location = loc;
+	}
 	DEBUG_PUSH_LEXICAL_SCOPE(c, astptr(expr->expr_block.first_stmt)->span);
 	llvm_emit_return_block(c, be_value, expr->type, expr->expr_block.first_stmt, expr->expr_block.block_exit);
 	bool is_unreachable = expr->expr_block.is_noreturn && c->current_block;
@@ -6159,6 +6168,7 @@ static inline void llvm_emit_expr_block(GenContext *c, BEValue *be_value, Expr *
 		llvm_emit_unreachable(c);
 	}
 	DEBUG_POP_LEXICAL_SCOPE(c);
+	c->inline_location = old_loc;
 }
 
 LLVMValueRef llvm_emit_call_intrinsic(GenContext *context, unsigned intrinsic, LLVMTypeRef *types, unsigned type_count,

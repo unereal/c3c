@@ -127,6 +127,8 @@ typedef struct GenContext_
 		LLVMBasicBlockRef current_block;
 		// The panic blocks to emit at the end.
 		LLVMBasicBlockRef *panic_blocks;
+		// Inline location
+		LLVMMetadataRef inline_location;
 	};
 	int ast_alloca_addr_space;
 	DebugContext debug;

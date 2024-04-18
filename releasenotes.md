@@ -18,6 +18,7 @@
 - `assert(false)` only allowed in unused branches or in tests. Compile time failed asserts is a compile time error.
 - Require expression blocks returning values to have the value used.
 - Detect "unsigned >= 0" as errors.
+- Improve callstack debug information #1184.
 
 ### Fixes
 - Fixed issue in safe mode when converting enums.

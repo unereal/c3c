@@ -224,8 +224,7 @@ void llvm_emit_debug_location(GenContext *c, SourceSpan location)
 	LLVMMetadataRef loc = LLVMDIBuilderCreateDebugLocation(c->context,
 														   row ? row : 1,
 														   col ? col : 1,
-														   scope, /* inlined at */ 0);
-
+														   scope, c->inline_location);
 	LLVMSetCurrentDebugLocation2(c->builder, loc);
 }
 
@@ -268,10 +267,7 @@ void llvm_debug_push_lexical_scope(GenContext *context, SourceSpan location)
 	{
 		debug_file = llvm_get_debug_file(context, location.file_id);
 	}
-	LLVMMetadataRef block =
-			LLVMDIBuilderCreateLexicalBlock(context->debug.builder, scope, debug_file,
-											row ? row : 1,
-											col ? col : 1);
+	LLVMMetadataRef block = LLVMDIBuilderCreateLexicalBlock(context->debug.builder, scope, debug_file, row ? row : 1, col ? col : 1);
 
 	llvm_debug_scope_push(context, block);
 }
