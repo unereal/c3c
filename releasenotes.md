@@ -24,6 +24,7 @@
 - Fixed issue in safe mode when converting enums.
 - Better checking of operator methods.
 - Bug when assigning an optional from an optional.
+- Lambdas were not type checked thoroughly #1185. 
 
 ### Stdlib changes
 - "init_new/init_temp" removed. 

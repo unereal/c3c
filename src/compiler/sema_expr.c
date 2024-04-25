@@ -7691,8 +7691,7 @@ static inline bool sema_expr_analyse_lambda(SemaContext *context, Type *target_t
 	}
 	if (to_sig && vec_size(to_sig->params) != vec_size(sig->params))
 	{
-		SEMA_ERROR(expr, "The lambda doesn't match the required type %s.", type_quoted_error_string(target_type));
-		return false;
+		RETURN_SEMA_ERROR(expr, "The lambda doesn't match the required type %s.", type_quoted_error_string(target_type));
 	}
 	FOREACH_BEGIN_IDX(i, Decl *param, sig->params)
 		if (param->var.type_info) continue;
@@ -7730,6 +7729,12 @@ static inline bool sema_expr_analyse_lambda(SemaContext *context, Type *target_t
 	decl->extname = decl->name = scratch_buffer_copy();
 	decl->type = type_new_func(decl, sig);
 	if (!sema_analyse_function_signature(context, decl, sig->abi, sig)) return false;
+	if (target_type && flat->pointer->function.prototype->raw_type != decl->type->function.prototype->raw_type)
+	{
+		RETURN_SEMA_ERROR(expr, "The lambda has type %s, which doesn't match the required type %s.",
+		                  type_quoted_error_string(decl->type),
+						  type_quoted_error_string(target_type));
+	}
 	decl->func_decl.lambda_ct_parameters = ct_lambda_parameters;
 	decl->func_decl.is_lambda = true;
 	decl->alignment = type_alloca_alignment(decl->type);
