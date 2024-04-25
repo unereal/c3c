@@ -583,7 +583,7 @@ void compiler_compile(void)
 			}
 			else
 			{
-				scratch_buffer_append("./");
+				if (name[0] != '/') scratch_buffer_append("./");
 				scratch_buffer_append(name);
 			}
 			name = scratch_buffer_to_string();
